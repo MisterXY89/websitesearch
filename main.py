@@ -6,8 +6,8 @@ import urllib.request
 from bs4 import BeautifulSoup, SoupStrainer
 ### [END] import ###
 
-# TODO: add console arg handler #
-# TODO: add depth support		#
+# TODO 1: add console arg handler #
+# TODO 2: add depth support		#
 
 ### [START] gloabl file config ###
 DEPTH = 1  # currently not used
@@ -51,7 +51,8 @@ def main():
 	urlList = getLinks(URL)
 	count = 0
 	for url in urlList:
-		# find all URLS in url and appedn to urlListDepth2 and merge it with urlList ...		
+		# [todo 2] -> find all URLS in url and append to urlListDepth2
+		# and merge it with urlList ... 
 		count += countWords(url, WORD)
 	print("\n%s documents have been searched."%len(urlList))
 	print('Url: %s\ncontains %s occurrences of word: %s'%(URL, count, WORD))
