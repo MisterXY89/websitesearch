@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 ### [END] import ###
 
 # TODO: add console arg handler #
+# TODO: add depth support		#
 
 ### [START] gloabl file config ###
 DEPTH = 1  # currently not used
