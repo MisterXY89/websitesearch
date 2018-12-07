@@ -6,19 +6,23 @@ import urllib.request
 from bs4 import BeautifulSoup, SoupStrainer
 ### [END] import ###
 
-# TODO 1: add console arg handler #
-# TODO 2: add depth support		#
+# TODO 1: add console arg handler 					#
+# TODO 2: add depth support							#
+# TODO 3: add url to list where word has been found	#
 
 ### [START] gloabl file config ###
-DEPTH = 1  # currently not used
-WORD = "Hotel"
-URL = "https://www.sueddeutsche.de/"
+DEPTH = 2  # currently not used
+WORD = "CDU"
+URL = "https://www.startpage.com"
+URL = "http://www.cipes.de/andrea"
+URL = "https://www.uni-konstanz.de/"
 
 URL_domain = tldextract.extract(URL).domain
 URL_subdomain = tldextract.extract(URL).subdomain
 URL_suffix = tldextract.extract(URL).suffix
 
 urlList = []
+whereFound = {}
 ### [END] global file config ###
 
 
@@ -35,6 +39,8 @@ def countWords(url, word):
 			for elt in words:
 				count += elt.count(WORD) 
 			print("Es wurde %s mal das Wort '%s' in der Url '%s' gefunden." %(count,word,url))
+			if count >= 1:
+				whereFound.update({url:count})
 			return count
 	except Exception as e:
 		print(e)	
@@ -50,12 +56,19 @@ MAIN METHOD: "controller of program"
 def main():
 	urlList = getLinks(URL)
 	count = 0
-	for url in urlList:
-		# [todo 2] -> find all URLS in url and append to urlListDepth2
-		# and merge it with urlList ... 
-		count += countWords(url, WORD)
+	if DEPTH == 2:
+		for url in urlList:
+			# [todo 2] -> find all URLS in url and append to urlListDepth2
+			# and merge it with urlList ... 
+			tmpList = getLinks(url)
+			urlList += tmpList
+			urlList = removeDuplicates(urlList)
+
+	for urlDepth in urlList:		
+		count += countWords(urlDepth, WORD)
 	print("\n%s documents have been searched."%len(urlList))
 	print('Url: %s\ncontains %s occurrences of word: %s'%(URL, count, WORD))
+	print(whereFound)
 
 
 """
@@ -83,7 +96,7 @@ def verifyLinks(urlList):
 		if tmpDomain == URL_domain and not url.__contains__("mailto:"):
 			print("Url '%s' is okay."%url)
 		elif tmpDomain == "php" or tmpDomain == "html":
-			urlList[i] = ("%s%s"%(URL,url))
+			urlList[i] = ("%s/%s"%(URL,url))
 			print("Url wurde von '%s' in '%s' geändert." %(url, urlList[i]))
 		else:
 			print("Deleting %s from url list." %url)
