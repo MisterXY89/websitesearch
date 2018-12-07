@@ -6,9 +6,12 @@ import urllib.request
 from bs4 import BeautifulSoup, SoupStrainer
 ### [END] import ###
 
-# TODO 1: add console arg handler 					#
-# TODO 2: add depth support							#
-# TODO 3: add url to list where word has been found	#
+
+# TODO 1: add console arg handler #
+# TODO 2: add depth support #
+# TODO 3: add date filter (time datetime="2018-12-07 08:37:01" 
+# class="timeformat">7. Dezember 2018, 08:37 Uhr</time>) from sz
+
 
 ### [START] gloabl file config ###
 DEPTH = 2  # currently not used
