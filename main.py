@@ -1,3 +1,16 @@
+####################################################
+#  
+# @author Tilman Kerl
+# @version 2019.01.18
+# 
+# searches for word in given url-
+# finds all links of given url and searches for 
+# given word -
+# SEE METHOD DOC FOR FURTHER INFO
+# 
+####################################################
+
+
 
 ### [START] import ###
 import requests
@@ -9,16 +22,15 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 # TODO 1: add console arg handler #
 # TODO 2: add depth support #
-# TODO 3: add date filter (time datetime="2018-12-07 08:37:01" 
-# class="timeformat">7. Dezember 2018, 08:37 Uhr</time>) from sz
+# TODO 3: add date filter (time datetime="2018-12-07 08:37:01" .timeformat
+# class="timeformat">7. Dezember 2018, 08:37 Uhr</time>) from SZ
 
 
 ### [START] gloabl file config ###
-DEPTH = 2  # currently not used
+DEPTH = 1  # currently only depth 1 or 2 possible
 WORD = "CDU"
-URL = "https://www.startpage.com"
-URL = "http://www.cipes.de/andrea"
 URL = "https://www.uni-konstanz.de/"
+URL = "https://www.sueddeutsche.de/politik"
 
 URL_domain = tldextract.extract(URL).domain
 URL_subdomain = tldextract.extract(URL).subdomain
@@ -36,6 +48,8 @@ def countWords(url, word):
 	try:
 		r = requests.get(url, allow_redirects=False)
 		soup = BeautifulSoup(r.content, 'lxml')
+		# call only if url = sz.de o.Ä.
+		checkDate(soup)
 		words = soup.findAll(text=lambda text: text and word in text)
 		count  = 0		
 		if words != None:
@@ -89,6 +103,9 @@ def getLinks(url):
 
 """
 Removes all links to external sites from list
+Removes all mailTo links
+Convert relativ url to absolute
+Removes .jpg and .pdf files
 """
 def verifyLinks(urlList):
 	print("Verifing urls")
@@ -96,15 +113,32 @@ def verifyLinks(urlList):
 		url = urlList[i]
 		tmpResult = tldextract.extract(url)
 		tmpDomain = tmpResult.domain
-		if tmpDomain == URL_domain and not url.__contains__("mailto:"):
+		if tmpDomain == URL_domain and not "mailto:" in url and not ".pdf" in url and not ".jpg" in url and not ".png" in url:
 			print("Url '%s' is okay."%url)
 		elif tmpDomain == "php" or tmpDomain == "html":
 			urlList[i] = ("%s/%s"%(URL,url))
-			print("Url wurde von '%s' in '%s' geändert." %(url, urlList[i]))
+			print("Url wurde von '%s' in '%s' geändert." %(url, urlList[i]))			
 		else:
 			print("Deleting %s from url list." %url)
 			del urlList[i]
 	return urlList
+
+
+
+"""
+if searching for word in sueddeutsche zeitung then this option is availabe
+check for date via .timeformat class on site
+"""
+def checkDate(soup):
+	TIME_SELECTOR = ".timeformat"
+	try:
+		timeSelector = soup.time #find_all("time", class_ = TIME_SELECTOR})
+		timeValue = timeSelector["datetime"]
+		# format : YYYY-mm-dd HH:MM:SS
+		print(timeValue)
+	except:
+		print("No date tag could be found.")
+
 
 
 """
