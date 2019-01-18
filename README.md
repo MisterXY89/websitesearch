@@ -20,10 +20,10 @@ MAIN METHOD: "controller of program"
 3. count all numbers up and return
 
 ###  `verifyLinks(urlList)`
-Removes all links to external sites from list
-Removes all mailTo link
-Convert relativ url to absolute
-Removes .jpg and .pdf files
+Removes all links to external sites from list </br>
+Removes all mailTo link</br>
+Convert relativ url to absolute</br>
+Removes .jpg and .pdf files</br>
 
 ## Requirements
 I set up a python venv.
@@ -44,8 +44,8 @@ urllib3==1.24.1
 ```
 
 ## Todos
- TODO 1: add console arg handler 
- TODO 2: adddepth support 
+ TODO 1: add console arg handler </br>
+ TODO 2: adddepth support </br>
  TODO 3: add date filter (time datetime="2018-12-07 08:37:01" .timeformat
 
 
